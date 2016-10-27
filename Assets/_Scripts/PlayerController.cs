@@ -13,13 +13,18 @@ public class PlayerController : MonoBehaviour
 
     public float Velocity = 10f;
     public float JumpForce = 100f;
-    public Camera camera;
-    public Transform SpawnPoint;
+    private GameObject _camera;
+    private GameObject  _spawnPoint;
+    private GameObject _gameControllerObject;
+    private GameController _gameController;
+
     
 
     [Header("Sound Clips")]
     public AudioSource JumpSound;
     public AudioSource DeathSound;
+    public AudioSource GemSound;
+
 
     // Use this for initialization
     void Start ()
@@ -71,7 +76,7 @@ public class PlayerController : MonoBehaviour
         }
 
         
-        this.camera.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, -10f);
+        this._camera.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, -10f);
 	
 	}
    
@@ -81,6 +86,10 @@ public class PlayerController : MonoBehaviour
         this._transform = GetComponent<Transform>();
         this._rigidbody = GetComponent<Rigidbody2D>();
         this._animator = GetComponent<Animator>();
+        this._camera = GameObject.FindWithTag("MainCamera");
+        this._spawnPoint = GameObject.FindWithTag("SpawnPoint");
+        this._gameControllerObject = GameObject.Find("Game Controller");
+        this._gameController = this._gameControllerObject.GetComponent<GameController>() as GameController;
         this._move = 0f;
         this._IsFacingRight = true;
         this._IsGrounded = false;
@@ -104,8 +113,16 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("DeathPlane"))
         {
-            this._transform.position = this.SpawnPoint.position;
+            this._transform.position = this._spawnPoint.transform.position;
             this.DeathSound.Play();
+            this._gameController.LivesValue -= 1;
+        }
+
+        if(other.gameObject.CompareTag("Gem"))
+        {
+            Destroy(other.gameObject);
+            this.GemSound.Play();
+            this._gameController.ScoreValue += 10;
         }
     }
     private void OnCollisionStay2D(Collision2D other)

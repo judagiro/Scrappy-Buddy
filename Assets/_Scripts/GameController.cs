@@ -33,7 +33,7 @@ public class GameController : MonoBehaviour
             }
             else
             {
-                this.LivesLabel.text = "Lives: " + this._livesValue;
+                this.LivesLabel.text = " " + this._livesValue;
             }
         }
     }
@@ -48,7 +48,7 @@ public class GameController : MonoBehaviour
         set
         {
             this._scoreValue = value;
-            this.ScoreLabel.text = "Score: " + this._scoreValue;
+            this.ScoreLabel.text = " " + this._scoreValue;
         }
     }
 
